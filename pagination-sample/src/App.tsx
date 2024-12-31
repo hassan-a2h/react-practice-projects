@@ -1,15 +1,53 @@
 import { useState } from "react";
+import {
+  IconChevronCompactDown,
+  IconChevronCompactUp,
+} from "@tabler/icons-react";
 import paginationMessage from "./config/paginationMessages";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [buttonCount, setButtonCount] = useState(3);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   return (
-    <div className="bg-slate-100 flex flex-col items-center mx-64 my-16 p-4 rounded-lg gap-4">
-      <PageButton buttonCount={buttonCount} currentPage={currentPage} />
-      <NavigationMessage message={paginationMessage[currentPage - 1]} />
-      <Navigation buttonCount={buttonCount} setCurrentPage={setCurrentPage} />
+    <>
+      <ExpandButton isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
+
+      {isExpanded && (
+        <div className="bg-slate-100 flex flex-col items-center mx-64 mb-16 p-4 rounded-b-lg gap-4">
+          <PageButton buttonCount={buttonCount} currentPage={currentPage} />
+          <NavigationMessage message={paginationMessage[currentPage - 1]} />
+          <Navigation
+            buttonCount={buttonCount}
+            setCurrentPage={setCurrentPage}
+          />
+        </div>
+      )}
+    </>
+  );
+}
+
+function ExpandButton({
+  isExpanded,
+  setIsExpanded,
+}: {
+  isExpanded: boolean;
+  setIsExpanded: Function;
+}) {
+  function handleExpand() {
+    setIsExpanded(!isExpanded);
+  }
+
+  return (
+    <div
+      className={`bg-slate-100 flex flex-col items-center mx-64 mt-16 p-4 rounded-t-lg gap-4 ${
+        !isExpanded && " rounded-b-lg"
+      }`}
+      onClick={handleExpand}
+    >
+      {!isExpanded && <IconChevronCompactDown />}
+      {isExpanded && <IconChevronCompactUp />}
     </div>
   );
 }
@@ -27,7 +65,8 @@ function PageButton({
         <button
           key={i}
           className={`bg-gray-600 text-white rounded-full w-8 h-8 shadow-lg ${
-            i + 1 === currentPage && "bg-blue-400"
+            i + 1 === currentPage &&
+            "bg-white text-black border-2 border-slate-400"
           }`}
         >
           {i + 1}
